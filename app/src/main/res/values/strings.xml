@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Event Reminder</string>
+    <string name="app_general_cancel">Cancel</string>
+</resources>
