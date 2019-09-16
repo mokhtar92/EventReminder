@@ -5,4 +5,7 @@
     <string name="general_error_permanently_denied_message">Go to app settings and allow permissions to continue</string>
     <string name="app_general_retry">Retry</string>
     <string name="app_general_cancel">Cancel</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

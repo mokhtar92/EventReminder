@@ -2,47 +2,81 @@ package com.domain.event_reminder.features.homescreen.view
 
 import android.Manifest
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.domain.event_reminder.R
+import com.domain.event_reminder.data.entities.AppEvent
 import com.domain.event_reminder.data.repository
+import com.domain.event_reminder.features.detailsactivity.EventDetailsActivity
+import com.domain.event_reminder.features.detailsfragment.EventDetailsFragment
+import com.domain.event_reminder.features.homescreen.view.adapter.EventAdapter
 import com.domain.event_reminder.features.homescreen.viewmodel.HomeViewModel
 import com.domain.event_reminder.features.homescreen.viewmodel.HomeViewModelFactory
-import com.domain.event_reminder.utils.isNetworkConnected
-import com.domain.event_reminder.utils.showCustomDialog
+import com.domain.event_reminder.utils.*
 import com.fondesa.kpermissions.extension.listeners
 import com.fondesa.kpermissions.extension.permissionsBuilder
 import com.fondesa.kpermissions.request.PermissionRequest
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.activity_home_content.*
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(), EventAdapter.ClickListener {
 
+    private lateinit var adapter: EventAdapter
     private lateinit var viewModel: HomeViewModel
+    private var twoPane: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        val factory = HomeViewModelFactory(repository)
+        if (fragment_container != null) {
+            twoPane = true
+        }
 
-        viewModel = ViewModelProviders.of(this, factory).get(HomeViewModel::class.java)
+        setupRecyclerView()
+
+        setupViewModel()
 
         checkInternetConnection()
 
         bindObservers()
     }
 
+    override fun onSinglePanClicked(event: AppEvent) {
+        val bundle = Bundle().apply { putParcelable(EVENT_PARCELABLE_KEY, event) }
+        openActivity(EventDetailsActivity::class.java, BUNDLE_KEY, bundle)
+    }
+
+    override fun onTwoPanClicked(event: AppEvent) {
+        val fragment = EventDetailsFragment().apply {
+            arguments = Bundle().apply {
+                putParcelable(EVENT_PARCELABLE_KEY, event)
+            }
+        }
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
+    }
+
+    private fun setupRecyclerView() {
+        adapter = EventAdapter(twoPane, this)
+        event_recycler_view.adapter = adapter
+    }
+
+    private fun setupViewModel() {
+        val factory = HomeViewModelFactory(repository)
+        viewModel = ViewModelProviders.of(this, factory).get(HomeViewModel::class.java)
+    }
+
     private fun bindObservers() {
         viewModel.events.observe(this, Observer {
-            Log.d("bindObserversssss", it.toString())
-            Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+            adapter.data = it
         })
 
-        viewModel.loading.observe(this, Observer { })
+        viewModel.loading.observe(this, Observer { if (it) progressBar.visible() else progressBar.gone() })
 
         viewModel.error.observe(this, Observer { Snackbar.make(parentView, it, Snackbar.LENGTH_LONG) })
     }
@@ -94,4 +128,8 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    companion object {
+        const val BUNDLE_KEY = "BUNDLE_KEY"
+        const val EVENT_PARCELABLE_KEY = "EVENT_PARCELABLE_KEY"
+    }
 }

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view_event_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="16dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/event_title_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/event_weather_image_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Event Tile" />
+
+        <TextView
+            android:id="@+id/event_desc_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/event_weather_image_view"
+            app:layout_constraintStart_toStartOf="@+id/event_title_text_view"
+            app:layout_constraintTop_toBottomOf="@+id/event_time_text_view"
+            tools:text="This should be event description This should be event description This should be event description This should be event description" />
+
+        <TextView
+            android:id="@+id/event_date_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@+id/event_title_text_view"
+            app:layout_constraintTop_toBottomOf="@+id/event_title_text_view"
+            tools:text="Mon, 16 Sept 2019" />
+
+        <TextView
+            android:id="@+id/event_time_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@+id/event_date_text_view"
+            app:layout_constraintTop_toBottomOf="@+id/event_date_text_view"
+            tools:text="10:30 PM" />
+
+        <ImageView
+            android:id="@+id/event_weather_image_view"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/event_title_text_view"
+            tools:srcCompat="@drawable/ic_sunny" />
+
+        <TextView
+            android:id="@+id/event_temperature_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            app:layout_constraintEnd_toEndOf="@+id/event_weather_image_view"
+            app:layout_constraintStart_toStartOf="@+id/event_weather_image_view"
+            app:layout_constraintTop_toBottomOf="@+id/event_weather_image_view"
+            tools:text="22 \u00B0C" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

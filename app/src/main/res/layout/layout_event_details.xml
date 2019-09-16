@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardCornerRadius="16dp">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/event_title_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Event Title" />
+
+            <TextView
+                android:id="@+id/event_status_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                app:layout_constraintEnd_toStartOf="@+id/event_date_text_view"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toStartOf="@+id/event_title_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/event_title_text_view"
+                tools:text="Confirmed" />
+
+            <TextView
+                android:id="@+id/event_date_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBaseline_toBaselineOf="@+id/event_status_text_view"
+                app:layout_constraintEnd_toStartOf="@+id/event_time_text_view"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/event_status_text_view"
+                tools:text="Mon, 16 Sept 2019" />
+
+            <TextView
+                android:id="@+id/event_time_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBaseline_toBaselineOf="@+id/event_date_text_view"
+                app:layout_constraintEnd_toEndOf="@+id/event_title_text_view"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/event_date_text_view"
+                tools:text="10:30 PM" />
+
+            <TextView
+                android:id="@+id/event_desc_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/event_time_text_view"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/event_status_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/event_status_text_view"
+                tools:text="This should be event description This should be event description This should be event description This should be event description" />
+
+            <ImageView
+                android:id="@+id/event_weather_image_view"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginTop="32dp"
+                app:layout_constraintEnd_toStartOf="@+id/event_humidity_image_view"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/event_desc_text_view"
+                app:layout_constraintTop_toBottomOf="@+id/event_desc_text_view"
+                tools:srcCompat="@drawable/ic_sunny" />
+
+            <TextView
+                android:id="@+id/event_temperature_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/event_weather_image_view"
+                app:layout_constraintStart_toStartOf="@+id/event_weather_image_view"
+                app:layout_constraintTop_toBottomOf="@+id/event_weather_image_view"
+                tools:text="22 \u00B0C" />
+
+            <ImageView
+                android:id="@+id/event_humidity_image_view"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                app:layout_constraintBottom_toTopOf="@+id/event_temperature_text_view"
+                app:layout_constraintEnd_toEndOf="@+id/event_desc_text_view"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/event_weather_image_view"
+                app:layout_constraintTop_toTopOf="@+id/event_weather_image_view"
+                app:srcCompat="@drawable/ic_humidity" />
+
+            <TextView
+                android:id="@+id/event_humidity_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="@+id/event_humidity_image_view"
+                app:layout_constraintStart_toStartOf="@+id/event_humidity_image_view"
+                app:layout_constraintTop_toBottomOf="@+id/event_humidity_image_view"
+                tools:text="22 %" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</com.google.android.material.card.MaterialCardView>
