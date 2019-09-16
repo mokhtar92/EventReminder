@@ -80,4 +80,7 @@ dependencies {
 
     // permissions
     implementation "com.github.fondesa:kpermissions:$versions.kotlinPermissions"
+
+    // material design
+    implementation "com.google.android.material:material:$versions.material_design"
 }

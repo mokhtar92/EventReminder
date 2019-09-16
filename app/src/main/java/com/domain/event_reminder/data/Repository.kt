@@ -15,8 +15,13 @@ class Repository(
     private val weather: WeatherService = weatherService
 ) : IRepository {
 
-    override fun getCalenderEvents(): Single<Events> {
-        return calender.getEventsFromCalender()
+    override fun getCalenderEvents(
+        calenderId: String,
+        orderBy: String,
+        includeEmail: Boolean,
+        singleEvents: Boolean
+    ): Single<Events> {
+        return calender.getEventsFromCalender(calenderId, orderBy, includeEmail, singleEvents)
     }
 
     override fun getWeatherData(id: String, units: String, apiKey: String): Single<WeatherResponse> {

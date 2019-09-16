@@ -1,16 +1,20 @@
 package com.domain.event_reminder.features.homescreen.viewmodel
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.domain.event_reminder.data.repository
+import com.domain.event_reminder.data.IRepository
+import com.domain.event_reminder.data.entities.AppEvent
 import com.google.api.services.calendar.model.Event
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import java.text.SimpleDateFormat
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(private val repository: IRepository) : ViewModel() {
 
     private val disposables by lazy { CompositeDisposable() }
 
@@ -20,8 +24,8 @@ class HomeViewModel : ViewModel() {
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
-    private val _events = MutableLiveData<List<Event>>()
-    val events: LiveData<List<Event>> = _events
+    private val _events = MutableLiveData<List<AppEvent>>()
+    val events: LiveData<List<AppEvent>> = _events
 
 
     fun getEvents() {
@@ -30,17 +34,57 @@ class HomeViewModel : ViewModel() {
             repository.getCalenderEvents()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .map { it.items }
+                .toObservable()
+                .concatMap { eventList -> Observable.fromIterable(eventList) }
+                .concatMap { event -> getAppEventFromEvent(event) }
+                .toList()
                 .subscribeBy(
                     onSuccess = {
                         _loading.postValue(false)
-                        _events.postValue(it.items)
+                        _events.postValue(it)
                     },
                     onError = {
+                        val x = it
                         _loading.postValue(false)
                         _error.postValue(it.message)
                     }
                 )
         )
+    }
+
+    private fun getAppEventFromEvent(event: Event): Observable<AppEvent> {
+        return repository.getWeatherData()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .toObservable()
+            .map {
+                val (date, time) = getDateAndTime(event)
+
+                AppEvent(
+                    id = event.id ?: "N/A",
+                    title = event.summary ?: "N/A",
+                    description = event.description ?: "N/A",
+                    date = date,
+                    time = time,
+                    status = event.status ?: "N/A",
+                    temperature = it.main?.temp ?: 0.0,
+                    humidity = it.main?.humidity ?: 0.0
+                )
+            }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun getDateAndTime(event: Event): Pair<String, String> {
+        val eventDateTime = event.start.dateTime?.toStringRfc3339()!!
+
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSX")
+        val dateTime = format.parse(eventDateTime)!!
+
+        val dateFormatter = SimpleDateFormat("E, dd MMM yyyy")
+        val timeFormatter = SimpleDateFormat("hh:mm a")
+
+        return Pair(dateFormatter.format(dateTime), timeFormatter.format(dateTime))
     }
 
     override fun onCleared() {

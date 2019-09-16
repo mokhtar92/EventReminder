@@ -10,7 +10,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class RemoteServiceFactory private constructor() {
 
     companion object {
-        const val WEATHER_API_BASE_URL = "http://api.openweathermap.org/data/2.5/weather"
+        const val WEATHER_API_BASE_URL = "https://api.openweathermap.org/data/2.5/"
 
         @Volatile
         private var instance: Retrofit? = null

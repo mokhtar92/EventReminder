@@ -68,10 +68,10 @@ class CalenderService {
 
     @Throws(IOException::class, GeneralSecurityException::class)
     fun getEventsFromCalender(
-        calenderId: String = "primary",
-        orderBy: String = "startTime",
-        includeEmail: Boolean = false,
-        singleEvents: Boolean = false
+        calenderId: String,
+        orderBy: String,
+        includeEmail: Boolean,
+        singleEvents: Boolean
     ): Single<Events> {
         // Build a new authorized API client service.
         val HTTP_TRANSPORT = NetHttpTransport()

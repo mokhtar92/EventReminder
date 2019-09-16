@@ -6,7 +6,12 @@ import com.google.api.services.calendar.model.Events
 import io.reactivex.Single
 
 interface IRepository {
-    fun getCalenderEvents(): Single<Events>
+    fun getCalenderEvents(
+        calenderId: String = "primary",
+        orderBy: String = "startTime",
+        includeEmail: Boolean = true,
+        singleEvents: Boolean = true
+    ): Single<Events>
 
     fun getWeatherData(
         id: String = "360630",

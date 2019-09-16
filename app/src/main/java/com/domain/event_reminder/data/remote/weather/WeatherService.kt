@@ -22,7 +22,7 @@ class WeatherService {
 }
 
 interface WeatherServiceEndPoint {
-    @GET
+    @GET("weather")
     fun getWeatherForToday(
         @Query("id") id: String,
         @Query("units") units: String,
