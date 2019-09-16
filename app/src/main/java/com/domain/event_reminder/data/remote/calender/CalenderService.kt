@@ -10,6 +10,7 @@ import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInsta
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets
+import com.google.api.client.http.HttpTransport
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.client.util.DateTime
@@ -35,7 +36,7 @@ class CalenderService {
     private val CREDENTIALS_FILE_PATH = "credentials.json"
 
     @Throws(IOException::class)
-    fun getCredentials(HTTP_TRANSPORT: NetHttpTransport): Credential {
+    fun getCredentials(HTTP_TRANSPORT: NetHttpTransport): Single<Credential> {
         // Load client secrets.
         val inputStream = App.appContext.assets.open(CREDENTIALS_FILE_PATH)
 
@@ -59,11 +60,16 @@ class CalenderService {
             override fun onAuthorization(authorizationUrl: AuthorizationCodeRequestUrl?) {
                 val url = (authorizationUrl?.build())
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 App.appContext.startActivity(browserIntent)
             }
         }
 
-        return authorizationCode.authorize("user")
+        return Single.create { emitter ->
+            emitter.onSuccess(
+                authorizationCode.authorize("user")
+            )
+        }
     }
 
     @Throws(IOException::class, GeneralSecurityException::class)
@@ -71,11 +77,12 @@ class CalenderService {
         calenderId: String,
         orderBy: String,
         includeEmail: Boolean,
-        singleEvents: Boolean
+        singleEvents: Boolean,
+        credential: Credential,
+        httpTransport: HttpTransport
     ): Single<Events> {
         // Build a new authorized API client service.
-        val HTTP_TRANSPORT = NetHttpTransport()
-        val service = Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+        val service = Calendar.Builder(httpTransport, JSON_FACTORY, credential)
             .setApplicationName(APPLICATION_NAME)
             .build()
 

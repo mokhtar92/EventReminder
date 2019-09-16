@@ -104,7 +104,7 @@ class HomeActivity : AppCompatActivity(), EventAdapter.ClickListener {
     private fun addPermissionRequestListener(request: PermissionRequest) {
         request.listeners {
             onAccepted {
-                viewModel.getEvents()
+                viewModel.getCredentials()
             }
 
             onDenied {

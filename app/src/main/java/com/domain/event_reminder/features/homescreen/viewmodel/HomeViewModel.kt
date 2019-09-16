@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.domain.event_reminder.data.IRepository
 import com.domain.event_reminder.data.entities.AppEvent
+import com.google.api.client.auth.oauth2.Credential
+import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.services.calendar.model.Event
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -28,10 +30,31 @@ class HomeViewModel(private val repository: IRepository) : ViewModel() {
     val events: LiveData<List<AppEvent>> = _events
 
 
-    fun getEvents() {
+    fun getCredentials() {
         _loading.postValue(true)
+        val netHttpTransport = NetHttpTransport()
         disposables.add(
-            repository.getCalenderEvents()
+            repository.getCredentialsForUser(netHttpTransport)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                    onSuccess = {
+                        getEvents(it, netHttpTransport)
+
+                    }, onError = {
+                        _loading.postValue(false)
+                        _error.postValue(it.message)
+                    }
+                )
+        )
+    }
+
+    private fun getEvents(
+        credential: Credential,
+        netHttpTransport: NetHttpTransport
+    ) {
+        disposables.add(
+            repository.getCalenderEvents(credential = credential, netHttpTransport = netHttpTransport)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map { it.items }
@@ -45,7 +68,6 @@ class HomeViewModel(private val repository: IRepository) : ViewModel() {
                         _events.postValue(it)
                     },
                     onError = {
-                        val x = it
                         _loading.postValue(false)
                         _error.postValue(it.message)
                     }
